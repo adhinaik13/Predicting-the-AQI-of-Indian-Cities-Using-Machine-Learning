@@ -1,0 +1,54 @@
+name: Validate AQI project artifacts
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-notebooks-and-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate notebook structure
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          notebooks = sorted(Path("Notebooks").glob("*.ipynb"))
+          if not notebooks:
+              raise SystemExit("No notebooks found in Notebooks/")
+
+          for path in notebooks:
+              with path.open(encoding="utf-8") as handle:
+                  notebook = json.load(handle)
+              if not isinstance(notebook.get("cells"), list):
+                  raise SystemExit(f"{path}: missing cells list")
+              if not isinstance(notebook.get("nbformat"), int):
+                  raise SystemExit(f"{path}: missing nbformat version")
+              print(f"Valid notebook JSON: {path} ({len(notebook['cells'])} cells)")
+          PY
+      - name: Validate dataset headers
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+
+          for name in ("dataset/train.csv", "dataset/sample_submission.csv"):
+              path = Path(name)
+              if not path.is_file():
+                  raise SystemExit(f"Required dataset file missing: {path}")
+              with path.open(newline="", encoding="utf-8-sig") as handle:
+                  header = next(csv.reader(handle), [])
+              if not header or any(not column.strip() for column in header):
+                  raise SystemExit(f"Invalid CSV header: {path}")
+              print(f"Valid CSV header: {path} ({len(header)} columns)")
+          PY
