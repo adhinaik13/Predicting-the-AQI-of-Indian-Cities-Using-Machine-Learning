@@ -1,56 +1,51 @@
-# Predicting-the-AQI-of-Indian-Cities-Using-Machine-Learning : H2O.ai Hackathon
+# Indian City AQI Prediction
 
-# Introduction
+An exploratory time-series forecasting project developed for an H2O.ai hackathon. The repository contains AQI training data, exploratory data analysis, and notebooks comparing ARIMA-family models with Prophet.
 
-Air Quality Index (AQI) is a crucial indicator of the air quality in a given area, providing valuable insights into the potential health risks associated with air pollution. With the rise of urbanization and industrialization, many cities in India face significant air quality challenges. Accurate prediction of AQI can aid in proactive planning and policy-making to mitigate the adverse effects of air pollution on public health and the environment.
+## Problem
 
-This project aims to develop a machine learning model that predicts the AQI of Indian cities based on various environmental and meteorological factors. By harnessing historical air quality and relevant feature data, we intend to create a predictive model that can assist local authorities and residents in understanding and preparing for potential changes in air quality. 
+Air Quality Index (AQI) forecasting can help communicate potential changes in air quality. This project explores historical AQI data and environmental features for Indian cities, with a focus on time-series approaches.
 
+## Repository contents
 
-# Objectives
+- `dataset/train.csv` — training dataset
+- `dataset/sample_submission.csv` — sample submission format
+- `Notebooks/Data Analysis-EDA.ipynb` — exploratory analysis notebook
+- `Notebooks/ARIMA .ipynb` — time-series forecasting experiments
+- `H2o_models/` and `output_file/` — supporting project artifacts
 
-The primary objectives of this project are as follows:
+## Models explored
 
-# Data Collection: 
- Gather historical AQI data from various cities across India, along with relevant environmental and meteorological features such as particulate matter levels (PM2.5, PM10,O3,CO,SO2),StateCode,AQI Values.
+- ARIMA
+- SARIMAX
+- Facebook Prophet
 
-# Data Preprocessing: 
-Clean, preprocess, and transform the collected data into a suitable format for training machine learning models.
-Handle missing values, outliers, and ensure data consistency.
+The original project notes report the following MAE values:
 
-# Feature Selection/Engineering: 
-Identify the most influential features impacting AQI and perform feature engineering if necessary. 
-This step aims to enhance the model's predictive power by focusing on key variables.
+| Model | Reported MAE |
+|---|---:|
+| Prophet | 528.99 |
+| SARIMAX | 36.89 |
+| ARIMA with Box–Cox transformation | 32 |
 
-# Model Selection:
-Explore and evaluate different machine learning algorithms such as  i choosen  ARIMA,SARIMAX,FB PROPHET. Choose the most appropriate model based on performance metrics.
+These are historical values recorded in the project notes, not independently reproduced results. The repository notes do not fully document the evaluation split, target scale, or leakage checks, so the values should not be treated as a validated benchmark until the experiments are rerun under a clearly defined protocol.
 
-# Model Training:
-Train the selected machine learning model using historical data. 
-Implement techniques like cross-validation to prevent overfitting and ensure generalization.
+## Explore the notebooks
 
-# Model Training: 
-Train the selected machine learning model using historical data. Implement techniques like cross-validation to prevent overfitting and ensure generalization.
+1. Clone or download this repository.
+2. Open the notebooks in Jupyter Notebook or JupyterLab.
+3. Review the import cells at the top of each notebook and install the required Python packages.
+4. Run the data preparation and modeling cells in order.
+5. Before comparing models, verify the time-based train/test split, target units, missing-value handling, and that future information is not used during training.
 
-# Model Evaluation: 
+The repository currently does not provide a pinned Python environment or an automated reproducible evaluation pipeline.
 
-Assess the model's performance using relevant evaluation metrics such as Mean Absolute Error (MAE), Root Mean Squared Error (RMSE). 
+## Limitations and next steps
 
- > I got MAE for FB PROPHET MODEL IS  : 528.99
+- Make the time-based validation split explicit and reproducible.
+- Record the AQI target scale, forecast horizon, and evaluation period.
+- Compare models against a simple baseline and report MAE/RMSE on the same held-out period.
+- Add a pinned dependency file and a script for repeatable training/evaluation.
+- Review the notebooks for leakage and document the dataset source and license.
 
- > I got MAE FOR  SARIMAX MODEL IS : 36.89
->  I MAE for ARIMA + BoxCox transformation : 32
-
- > Which ever has less MAE VALUE perfoms well 
-
- > So I have choosen ARIMA + BoxCox Transformation MODEL to train future data values 
-
-
-# Conclusion
-This project aims to contribute to the understanding and prediction of air quality in Indian cities using machine learning techniques.
-By developing an accurate AQI prediction model, we aspire to empower local governments, policymakers, and residents with valuable information to make informed decisions and take proactive steps toward improving air quality and public health.
-
-
-
-
-
+This is an educational/research project, not a deployed air-quality forecasting service. Predictions should not be used as a substitute for official AQI measurements or public-health guidance.
