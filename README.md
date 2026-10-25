@@ -40,7 +40,18 @@ These are historical values recorded in the project notes, not independently rep
 4. Run the data preparation and modeling cells in order.
 5. Before comparing models, verify the time-based train/test split, target units, missing-value handling, and that future information is not used during training.
 
-The repository currently does not provide a pinned Python environment or an automated reproducible evaluation pipeline.
+A standard-library evaluation script now measures a previous-observation persistence baseline with a chronological holdout split per `ID_Date` series. CI runs the baseline and its unit tests. The script is intentionally a baseline, not a reproduction of the ARIMA/SARIMAX/Prophet experiments; the original model metrics remain unverified.
+
+## Reproducible baseline evaluation
+
+Run from the repository root with Python 3.10+ (standard library only):
+
+```bash
+python -m unittest -v test_evaluate_baseline.py
+python evaluate_baseline.py --data dataset/train.csv --output baseline_metrics.json
+```
+
+The script parses the series key and date from `ID_Date`, sorts each series chronologically, holds out the latest 20% of rows per series, and predicts each held-out value using the immediately previous observed AQI from that same series. It reports MAE/RMSE, test date range, series count, and test row count. This avoids random splitting and cross-series carryover. The result is a persistence baseline only; it does not prove the older model results or establish a production-quality forecast.
 
 ## Limitations and next steps
 
