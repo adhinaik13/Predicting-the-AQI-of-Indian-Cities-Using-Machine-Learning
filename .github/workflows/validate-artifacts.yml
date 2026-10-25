@@ -47,8 +47,18 @@ jobs:
               if not path.is_file():
                   raise SystemExit(f"Required dataset file missing: {path}")
               with path.open(newline="", encoding="utf-8-sig") as handle:
-                  header = next(csv.reader(handle), [])
+                  reader = csv.reader(handle)
+                  header = next(reader, [])
+                  first_row = next(reader, None)
               if not header or any(not column.strip() for column in header):
                   raise SystemExit(f"Invalid CSV header: {path}")
-              print(f"Valid CSV header: {path} ({len(header)} columns)")
+              if len(header) != len(set(header)):
+                  raise SystemExit(f"Duplicate CSV columns: {path}")
+              if first_row is None:
+                  raise SystemExit(f"CSV contains a header but no data rows: {path}")
+              if len(first_row) != len(header):
+                  raise SystemExit(f"CSV row width does not match header: {path}")
+              if name.endswith("sample_submission.csv") and not {"ID_Date", "AQI"}.issubset(header):
+                  raise SystemExit("sample_submission.csv must include ID_Date and AQI columns")
+              print(f"Valid non-empty CSV: {path} ({len(header)} columns)")
           PY
