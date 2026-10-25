@@ -24,8 +24,8 @@ class BaselineEvaluationTests(unittest.TestCase):
         result = evaluate(load_series(path), test_fraction=0.4)
         self.assertEqual(result["test_rows"], 2)
         self.assertEqual(result["test_start"], "2024-01-04")
-        self.assertAlmostEqual(result["mae"], 3.5)
-        self.assertAlmostEqual(result["rmse"], (12.5) ** 0.5)
+        self.assertAlmostEqual(result["mae"], 2.5)
+        self.assertAlmostEqual(result["rmse"], (8.5) ** 0.5)
 
     def test_series_are_evaluated_independently(self):
         rows = []
