@@ -1,3 +1,5 @@
+[![Artifact Validation](https://github.com/adhinaik13/Predicting-the-AQI-of-Indian-Cities-Using-Machine-Learning/actions/workflows/validate-artifacts.yml/badge.svg)](https://github.com/adhinaik13/Predicting-the-AQI-of-Indian-Cities-Using-Machine-Learning/actions/workflows/validate-artifacts.yml)
+
 # Indian City AQI Prediction
 
 An exploratory time-series forecasting project developed for an H2O.ai hackathon. The repository contains AQI training data, exploratory data analysis, and notebooks comparing ARIMA-family models with Prophet.
