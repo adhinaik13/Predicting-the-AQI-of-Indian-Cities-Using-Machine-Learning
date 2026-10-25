@@ -62,3 +62,8 @@ The script parses the series key and date from `ID_Date`, sorts each series chro
 - Review the notebooks for leakage and document the dataset source and license.
 
 This is an educational/research project, not a deployed air-quality forecasting service. Predictions should not be used as a substitute for official AQI measurements or public-health guidance.
+
+
+### Baseline result (CI run)
+
+On the committed training CSV, the chronological previous-observation baseline evaluated **5,088 held-out rows across 40 series** (test dates 2022-06-16 through 2022-12-03): MAE **28.54** and RMSE **43.42**. These values are reproducible for the current file and split settings; they are not directly comparable to the older reported model metrics unless those metrics used the same data, target scale, and held-out period.
