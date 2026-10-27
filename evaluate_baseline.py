@@ -16,7 +16,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-ID_DATE_PATTERN = re.compile(r"^(?P<series>.+)_(?P<date>\\d{4}-\\d{2}-\\d{2})$")
+ID_DATE_PATTERN = re.compile(r"^(?P<series>.+)_(?P<date>\d{4}-\d{2}-\d{2})$")
 
 
 def load_series(path: Path) -> dict[str, list[tuple[date, float]]]:
@@ -108,7 +108,7 @@ def main() -> int:
     except (OSError, ValueError) as exc:
         print(f"Evaluation failed: {exc}", file=sys.stderr)
         return 2
-    rendered = json.dumps(metrics, indent=2, sort_keys=True) + "\\n"
+    rendered = json.dumps(metrics, indent=2, sort_keys=True) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(rendered, encoding="utf-8")
