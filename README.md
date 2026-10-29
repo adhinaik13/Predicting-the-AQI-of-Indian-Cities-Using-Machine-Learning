@@ -40,7 +40,7 @@ These are historical values recorded in the project notes, not independently rep
 4. Run the data preparation and modeling cells in order.
 5. Before comparing models, verify the time-based train/test split, target units, missing-value handling, and that future information is not used during training.
 
-A standard-library evaluation script now measures a previous-observation persistence baseline with a chronological holdout split per `ID_Date` series. CI runs the baseline and its unit tests. The script is intentionally a baseline, not a reproduction of the ARIMA/SARIMAX/Prophet experiments; the original model metrics remain unverified.
+A standard-library evaluation script now measures a previous-observation persistence baseline with a chronological holdout split per `ID_Date` series. CI runs the baseline and its unit tests, validates the notebooks and dataset structure, and publishes the generated `baseline_metrics.json` as a commit-specific artifact for 30 days. See the [CI run history](https://github.com/vankudothuadhinaik/Predicting-the-AQI-of-Indian-Cities-Using-Machine-Learning/actions) to inspect a run and download its artifact. The script is intentionally a baseline, not a reproduction of the ARIMA/SARIMAX/Prophet experiments; the original model metrics remain unverified.
 
 ## Reproducible baseline evaluation
 
