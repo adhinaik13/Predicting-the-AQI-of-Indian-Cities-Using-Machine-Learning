@@ -19,8 +19,9 @@ jobs:
           python-version: "3.12"
       - name: Test and evaluate reproducible persistence baseline
         run: |
-          python -m unittest -v test_evaluate_baseline.py
+          python -m unittest -v test_evaluate_baseline.py test_compare_baselines.py
           python evaluate_baseline.py --data dataset/train.csv --output baseline_metrics.json
+          python compare_baselines.py --data dataset/train.csv --output baseline_comparison.json
       - name: Validate notebook structure
         run: |
           python - <<'PY'
@@ -71,6 +72,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: aqi-baseline-metrics-${{ github.sha }}
-          path: baseline_metrics.json
+          path: |
+            baseline_metrics.json
+            baseline_comparison.json
           if-no-files-found: error
           retention-days: 30
