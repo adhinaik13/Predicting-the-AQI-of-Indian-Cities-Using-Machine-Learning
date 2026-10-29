@@ -66,3 +66,11 @@ jobs:
                   raise SystemExit("sample_submission.csv must include ID_Date and AQI columns")
               print(f"Valid non-empty CSV: {path} ({len(header)} columns)")
           PY
+
+      - name: Publish reproducible baseline metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: aqi-baseline-metrics-${{ github.sha }}
+          path: baseline_metrics.json
+          if-no-files-found: error
+          retention-days: 30
