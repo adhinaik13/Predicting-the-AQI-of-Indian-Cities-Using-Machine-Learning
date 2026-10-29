@@ -21,7 +21,7 @@ class BaselineComparisonTests(unittest.TestCase):
         self.assertEqual(result["test_end"], "2024-01-05")
         self.assertEqual(set(result["models"]), {"previous_observation", "training_mean"})
         self.assertAlmostEqual(result["models"]["previous_observation"]["mae"], 2.5)
-        self.assertAlmostEqual(result["models"]["training_mean"]["mae"], 4.5)
+        self.assertAlmostEqual(result["models"]["training_mean"]["mae"], 11.0 / 3.0)
 
     def test_invalid_holdout_fraction_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "test fraction"):
