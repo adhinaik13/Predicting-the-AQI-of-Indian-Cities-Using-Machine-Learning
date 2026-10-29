@@ -85,7 +85,7 @@ class BaselineEvaluationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "train.csv"
             path.write_text(
-                "ID_Date,AQI,AQI\\nA_1_2024-01-01,1,2\\n",
+                "ID_Date,AQI,AQI\nA_1_2024-01-01,1,2\n",
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(ValueError, "duplicate column names"):
@@ -95,9 +95,9 @@ class BaselineEvaluationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "train.csv"
             path.write_text(
-                "ID_Date,AQI\\n"
-                "A_1_2024-01-01,1\\n"
-                "A_1_2024-01-02,2,unexpected\\n",
+                "ID_Date,AQI\n"
+                "A_1_2024-01-01,1\n"
+                "A_1_2024-01-02,2,unexpected\n",
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(ValueError, "line 3.*more fields"):
@@ -107,10 +107,10 @@ class BaselineEvaluationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "train.csv"
             path.write_text(
-                "ID_Date,AQI\\n"
-                "A_1_2024-02-30,1\\n"
-                "A_1_2024-03-01,2\\n"
-                "A_1_2024-03-02,3\\n",
+                "ID_Date,AQI\n"
+                "A_1_2024-02-30,1\n"
+                "A_1_2024-03-01,2\n"
+                "A_1_2024-03-02,3\n",
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(ValueError, "line 2.*invalid calendar date"):
@@ -120,7 +120,7 @@ class BaselineEvaluationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "train.csv"
             path.write_text(
-                'ID_Date,AQI\\nA_1_2024-01-01,"1\\n',
+                'ID_Date,AQI\nA_1_2024-01-01,"1\n',
                 encoding="utf-8",
             )
             with self.assertRaises(csv.Error):
