@@ -45,6 +45,32 @@ class BaselineEvaluationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "ID_Date"):
             load_series(path)
 
+    def test_rejects_impossible_calendar_dates(self):
+        path = self.write_csv([
+            {"ID_Date": "A_1_2024-02-30", "AQI": "1"},
+            {"ID_Date": "A_1_2024-03-01", "AQI": "2"},
+            {"ID_Date": "A_1_2024-03-02", "AQI": "3"},
+        ])
+        with self.assertRaises(ValueError):
+            load_series(path)
+
+    def test_rejects_duplicate_dates_within_a_series(self):
+        path = self.write_csv([
+            {"ID_Date": "A_1_2024-01-01", "AQI": "1"},
+            {"ID_Date": "A_1_2024-01-01", "AQI": "2"},
+            {"ID_Date": "A_1_2024-01-03", "AQI": "3"},
+        ])
+        with self.assertRaisesRegex(ValueError, "duplicate date"):
+            load_series(path)
+
+    def test_rejects_invalid_test_fraction(self):
+        path = self.write_csv([
+            {"ID_Date": f"A_1_2024-01-0{i}", "AQI": str(i)}
+            for i in range(1, 5)
+        ])
+        with self.assertRaisesRegex(ValueError, "test fraction"):
+            evaluate(load_series(path), test_fraction=0.9)
+
     def test_rejects_non_finite_aqi(self):
         path = self.write_csv([
             {"ID_Date": f"A_1_2024-01-0{i}", "AQI": value}
