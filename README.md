@@ -51,7 +51,7 @@ python -m unittest -v test_evaluate_baseline.py
 python evaluate_baseline.py --data dataset/train.csv --output baseline_metrics.json
 ```
 
-The script parses the series key and date from `ID_Date`, sorts each series chronologically, holds out the latest 20% of rows per series, and predicts each held-out value using the immediately previous observed AQI from that same series. It reports MAE/RMSE, test date range, series count, and test row count. This avoids random splitting and cross-series carryover. The result is a persistence baseline only; it does not prove the older model results or establish a production-quality forecast.
+The script parses the series key and date from `ID_Date`, rejects duplicate headers, surplus row fields, malformed CSV quoting, invalid calendar dates, and non-finite AQI values with actionable errors, sorts each series chronologically, holds out the latest 20% of rows per series, and predicts each held-out value using the immediately previous observed AQI from that same series. It reports MAE/RMSE, test date range, series count, and test row count. This avoids random splitting and cross-series carryover. The result is a persistence baseline only; it does not prove the older model results or establish a production-quality forecast.
 
 ## Limitations and next steps
 
