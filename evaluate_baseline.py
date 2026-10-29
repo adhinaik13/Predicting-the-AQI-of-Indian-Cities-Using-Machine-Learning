@@ -20,12 +20,17 @@ ID_DATE_PATTERN = re.compile(r"^(?P<series>.+)_(?P<date>\d{4}-\d{2}-\d{2})$")
 
 def load_series(path: Path) -> dict[str, list[tuple[date, float]]]:
     with path.open(newline="", encoding="utf-8-sig") as handle:
-        reader = csv.DictReader(handle)
-        fields = set(reader.fieldnames or [])
+        reader = csv.DictReader(handle, strict=True)
+        fieldnames = reader.fieldnames or []
+        if len(fieldnames) != len(set(fieldnames)):
+            raise ValueError("train CSV contains duplicate column names")
+        fields = set(fieldnames)
         if not {"ID_Date", "AQI"}.issubset(fields):
             raise ValueError("train CSV must contain ID_Date and AQI columns")
         series: dict[str, list[tuple[date, float]]] = {}
         for line, row in enumerate(reader, start=2):
+            if None in row:
+                raise ValueError(f"line {line}: row contains more fields than the header")
             key = (row.get("ID_Date") or "").strip()
             match = ID_DATE_PATTERN.fullmatch(key)
             if not match:
@@ -37,9 +42,11 @@ def load_series(path: Path) -> dict[str, list[tuple[date, float]]]:
                 raise ValueError(f"line {line}: AQI must be numeric, got {raw!r}") from exc
             if not math.isfinite(value):
                 raise ValueError(f"line {line}: AQI must be finite")
-            series.setdefault(match.group("series"), []).append(
-                (date.fromisoformat(match.group("date")), value)
-            )
+            try:
+                parsed_date = date.fromisoformat(match.group("date"))
+            except ValueError as exc:
+                raise ValueError(f"line {line}: ID_Date contains an invalid calendar date: {key!r}") from exc
+            series.setdefault(match.group("series"), []).append((parsed_date, value))
     if not series:
         raise ValueError("train CSV contains no records")
     for key, rows in series.items():
