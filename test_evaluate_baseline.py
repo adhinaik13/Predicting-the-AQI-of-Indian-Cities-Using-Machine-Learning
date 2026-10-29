@@ -80,5 +80,51 @@ class BaselineEvaluationTests(unittest.TestCase):
             load_series(path)
 
 
+
+    def test_rejects_duplicate_csv_headers(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "train.csv"
+            path.write_text(
+                "ID_Date,AQI,AQI\nA_1_2024-01-01,1,2\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "duplicate column names"):
+                load_series(path)
+
+    def test_rejects_surplus_fields_with_source_line_number(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "train.csv"
+            path.write_text(
+                "ID_Date,AQI\n"
+                "A_1_2024-01-01,1\n"
+                "A_1_2024-01-02,2,unexpected\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "line 3.*more fields"):
+                load_series(path)
+
+    def test_invalid_calendar_date_includes_source_line_number(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "train.csv"
+            path.write_text(
+                "ID_Date,AQI\n"
+                "A_1_2024-02-30,1\n"
+                "A_1_2024-03-01,2\n"
+                "A_1_2024-03-02,3\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "line 2.*invalid calendar date"):
+                load_series(path)
+
+    def test_rejects_malformed_quoted_csv(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "train.csv"
+            path.write_text(
+                'ID_Date,AQI\nA_1_2024-01-01,"1\n',
+                encoding="utf-8",
+            )
+            with self.assertRaises(csv.Error):
+                load_series(path)
+
 if __name__ == "__main__":
     unittest.main()
